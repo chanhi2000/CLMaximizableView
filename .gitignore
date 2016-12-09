@@ -1,0 +1,7 @@
+# Mac OS X
+*.DS_Store
+
+# Xcode
+Example/*.xcuserstate
+Example/Example.xcodeproj/xcuserdata
+Example/Example.xcodeproj/project.xcworkspace
