@@ -8,171 +8,178 @@
 
 import UIKit
 
-class MaximizableView: UIView {
+class MaximizableView: UIView, UITableViewDataSource, UITableViewDelegate  {
     
-//    var fillView:UIView!
-//    
-//    lazy var containerView:UIView = {
-//        let v = UIView()
-//        v.layer.masksToBounds = true
-//        v.layer.borderWidth = 0.2
-//        v.layer.borderColor = UIColor.clear.cgColor
-//        return v
-//    }()
-//    
-//    var statusBarView:UIView!
-//    let statusBarHeight:CGFloat = 19
-//    
-//    var statusBarIsDark:Bool = false {
-//        didSet {
-//            statusBarIsDark = UIApplication.shared.statusBarStyle == UIStatusBarStyle.default
-//        }
-//    }
-//    var pointInFill:CGPoint {
-//        didSet {
-//            pointInFill = calculatePointInView(fillView: fillView)
-//        }
-//    }
-//    @IBInspectable var animationDuration:TimeInterval
-//    @IBInspectable var cornerRadius:CGFloat
-//    @IBInspectable var shadowOpacity:Float
-//    @IBInspectable var shadowRadius:CGFloat
-//    @IBInspectable var springCoef:CGFloat
-//    @IBInspectable var shadowOffset:CGSize
-//    
-//    var isMaximized:Bool {
-//        didSet {
-//            if isMaximized {
-//                minimize()
-//            } else {
-//                maximize()
-//            }
-//        }
-//    }
-//    
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        layer.shadowPath = UIBezierPath(roundedRect: layer.bounds, cornerRadius: cornerRadius).cgPath
-//        containerView.frame = bounds
-//        sharedInit()
-//    }
-//    
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//    
-//    func sharedInit() {
-//        containerView = UIView(frame: bounds)
-//        containerView.backgroundColor = backgroundColor
-//        addSubview(containerView)
-//        backgroundColor = UIColor.clear
-//        while subviews.count > 1 {
-//            containerView.addSubview(subviews.first!)
-//        }
-//        
-//        animationDuration = 0.4
-//        cornerRadius = 8.0
-//        shadowOpacity = 0.5
-//        shadowRadius = 2.0
-//        springCoef = 0.8
-//        shadowOffset = __CGSizeEqualToSize(CGSize.zero, shadowOffset) ? CGSize(width: 0, height: 1) : shadowOffset
-//        isMaximized = false
-//        
-//        layer.masksToBounds = false
-//        layer.shadowOffset = shadowOffset
-//        layer.shadowColor = UIColor.black.cgColor
-//        layer.shadowRadius = shadowRadius
-//        layer.shadowOpacity = shadowOpacity
-//        layer.shadowPath = UIBezierPath(roundedRect: containerView.layer.bounds, cornerRadius: cornerRadius).cgPath
-//    }
-//    
-//    override func prepareForInterfaceBuilder() {
-//        sharedInit()
-//    }
-//    
-//    // MAKR: - Variable Set Functions
-//    func setCornerRadius(cornerRadius:CGFloat) {  layer.cornerRadius = cornerRadius  }
-//    func setShadowOpacity(shadowOpacity:Float) {  layer.shadowOpacity = shadowOpacity  }
-//    func setShadowRadius(shadowRadius:CGFloat) {  layer.shadowRadius = shadowRadius  }
-//    func setShadowOffset(shadowOffset:CGSize) {  layer.shadowOffset = shadowOffset  }
-//    
-//    // MAKR: - Transitions
-//    func maximize() {
-//        fillView = getSuper()
-//        layer.shadowOpacity = 0.0
-//        fillView.addSubview(containerView)
-//        containerView.frame = CGRect(x: pointInFill.x, y: pointInFill.y,
-//                                     width: frame.size.width, height: frame.size.height)
-//        if statusBarView != nil {
-//            statusBarView = UIView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: statusBarHeight+1))
-//        }
-//        statusBarView.backgroundColor = containerView.backgroundColor
-//        if let bgColor = statusBarView.backgroundColor {
-//            let componentColors:[CGFloat] = bgColor.cgColor.components!
-//            let colorBrightness:CGFloat = (componentColors[0]*299 + componentColors[1]*587 + componentColors[2]*114)/1000
-//            
-//            
-//            if colorBrightness < 0.5 {
-//                UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
-//            } else {
-//                UIApplication.shared.statusBarStyle = UIStatusBarStyle.default
-//            }
-//            
-//            statusBarView.alpha = 0.0
-//            fillView.addSubview(statusBarView)
-//            
-//            UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
-//                self.containerView.layer.cornerRadius = 0
-//                self.containerView.frame = CGRect(x: 0, y: self.statusBarHeight, width: self.fillView.frame.size.width, height: self.fillView.frame.size.height-self.statusBarHeight)
-//                self.statusBarView.alpha = 1
-//            }, completion: { (completed) in
-//                self.isMaximized = true
-//            })
-//        }
-//    }
-//    
-//    func minimize() {
-//        containerView.layer.cornerRadius = cornerRadius
-//        UIApplication.shared.statusBarStyle = statusBarIsDark ? UIStatusBarStyle.default : UIStatusBarStyle.lightContent
-//        
-//        UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: springCoef, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
-//            self.containerView.frame = CGRect(x: self.pointInFill.x, y: self.pointInFill.y, width: self.frame.size.width, height: self.frame.size.height)
-//            self.statusBarView.alpha = 0
-//            
-//        }) { (completed) in
-//            self.layer.shadowOpacity = self.shadowOpacity
-//            self.addSubview(self.containerView)
-//            self.containerView.frame = self.bounds
-//            self.statusBarView.removeFromSuperview()
-//            self.isMaximized = false
-//        }
-//    }
-//    
-//    func getSuper() -> UIView {
-//        var tempView = self.superview
-//        while (tempView?.superview != nil) {
-//            tempView = tempView?.superview
-//        }
-//        return tempView!
-//    }
-//    
-//    
-//    func calculatePointInView(fillView:UIView) -> CGPoint {
-//        var tempView = self
-//        var point = CGPoint(x: 0, y: 0)
-//        while (tempView != fillView) {
-//            point.x += tempView.frame.origin.x
-//            point.y += tempView.frame.origin.y
-//            tempView = tempView.superview as! MaximizableView
-//        }
-//        return point
-//    }
-//    
-//    override func draw(_ rect: CGRect) {
-//        super.draw(rect)
-//        containerView.layer.cornerRadius = cornerRadius
-//        layer.shadowRadius = shadowRadius
-//        layer.shadowOpacity = shadowOpacity
-//        layer.shadowPath = UIBezierPath(roundedRect: containerView.layer.bounds, cornerRadius: cornerRadius).cgPath
-//    }
+    static let statusBarHeight:CGFloat = 19
+    
+    var mvWidth:CGFloat = 244
+    var mvHeight:CGFloat = 156
+    var xOffset:CGFloat = 0
+    var yOffset:CGFloat = 0
+    var containerColor:UIColor = .blue
+    
+    var isMaximized:Bool = false {
+        didSet {
+            UIApplication.shared.statusBarStyle = isMaximized ? .lightContent : .default
+            button.setTitle(isMaximized ? "Minimize" : "Maximize", for: .normal)
+            setupLayers(isMaximized)
+            if isMaximized {
+                maximizeView()
+            } else {
+                minimizeView()
+            }
+        }
+    }
+    
+    var viewController: ViewController?
+    
+    let containerView:UIView = {
+        let v = UIView()
+        v.layer.cornerRadius = 8.0
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+    
+    lazy var button:UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle("Maximize", for: .normal)
+        btn.titleLabel?.font = .systemFont(ofSize: 22)
+        btn.setTitleColor(.white, for: .normal)
+        btn.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        return btn
+    }()
+    
+    lazy var listView:UITableView = {
+        let tv = UITableView()
+        tv.backgroundColor = .white
+        tv.isScrollEnabled = false
+        tv.allowsSelection = false
+        tv.dataSource = self
+        tv.delegate = self
+        tv.layer.masksToBounds = true
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        addSubview(containerView)
+        containerView.backgroundColor = containerColor
+        containerView.addSubview(button)
+        containerView.addSubview(listView)
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        setupView()
+        setupContainerView()
+        setupLayers(false)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    fileprivate func setupView() {
+        
+        widthAnchor.constraint(equalToConstant: mvWidth).isActive = true
+        heightAnchor.constraint(equalToConstant: mvHeight).isActive = true
+        if let rootView = self.superview {
+            centerXAnchor.constraint(equalTo: rootView.centerXAnchor, constant: xOffset).isActive = true
+            centerYAnchor.constraint(equalTo: rootView.centerYAnchor, constant: yOffset).isActive = true
+        }
+        
+    }
+    
+    fileprivate func setupContainerView() {
+        
+        addConstraintsWithFormat("H:|[v0]|", views: containerView)
+        addConstraintsWithFormat("V:|[v0]|", views: containerView)
+        
+        containerView.addConstraintsWithFormat("H:|-10-[v0]-10-|", views: button)
+        button.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        listView.register(UITableViewCell.self, forCellReuseIdentifier: MaximizableView.cellId)
+        containerView.addConstraintsWithFormat("H:|[v0]|", views: listView)
+        listView.topAnchor.constraint(equalTo: button.bottomAnchor).isActive = true
+        listView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
+        
+    }
+    
+    fileprivate func setupLayers(_ bool:Bool) {
+        layer.masksToBounds = bool
+        layer.borderWidth = bool ? 0.0 : 0.5
+        layer.cornerRadius = bool ? 0.0 : 8.0
+        layer.shadowRadius = bool ? 0.0 : 8.0
+        layer.shadowOpacity = bool ? 0.0 : 8.0
+        
+        listView.isScrollEnabled = bool
+        listView.allowsSelection = bool
+        
+        containerView.layer.masksToBounds = !bool
+        containerView.layer.cornerRadius = bool ? 0.0 : 8.0
+    }
+    
+    func buttonPressed() {
+        print("button pressed -> toggle isMaximized")
+        isMaximized = !isMaximized
+    }
+    
+    fileprivate func maximizeView() {
+        if let vc = viewController, let rootView = vc.view {
+            
+            rootView.layoutIfNeeded()
+            rootView.addConstraintsWithFormat("V:|[v0]|", views: self)
+            rootView.addConstraintsWithFormat("H:|[v0]|", views: self)
+            button.topAnchor.constraint(equalTo: self.topAnchor, constant: MaximizableView.statusBarHeight).isActive = true
+            listView.topAnchor.constraint(equalTo: button.bottomAnchor).isActive = true
+            
+            updateWithCustomAnimation(view: rootView, message: "maximize!")
+        }
+    }
+    
+    fileprivate func minimizeView() {
+        if let vc = viewController, let rootView = vc.view {
+            
+            rootView.layoutIfNeeded()
+            removeLayoutConstraints(views: self, rootView)
+            setupView()
+            setupContainerView()
+            
+            updateWithCustomAnimation(view: rootView, message: "minimize")
+        }
+    }
+    
+    fileprivate func updateWithCustomAnimation(view:UIView, message:String?) {
+        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
+            view.setNeedsUpdateConstraints()
+            view.layoutIfNeeded()
+        }) { (completed) in
+            if let msg = message {
+                print(msg)
+            }
+        }
+    }
+    
+    fileprivate func removeLayoutConstraints(views:UIView...) {
+        for v in views {
+            v.removeConstraints(v.constraints)
+        }
+    }
+    
+    
+    // MARK: UITableView
+    static let cellId = "tvCell"
+    
+    // MARK: - UITableViewDataSource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 2
+    }
+    
+    // MAKR: UITableViewDelegate
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: MaximizableView.cellId, for: indexPath)
+        return cell
+    }
 }
